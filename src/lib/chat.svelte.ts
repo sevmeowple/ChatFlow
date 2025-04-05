@@ -8,6 +8,7 @@ import Database from '@tauri-apps/plugin-sql';
 class Chat {
     ChatHistoryList: ChatHistoryList = $state({})
     currentHistory = $state<string>('')
+    selectedNodeId: string | undefined = $state(undefined);
     // chat(model:string,)
     nodeIndex: Record<string, Record<string, ChatNode>> = {};
     db: Database | null = null;

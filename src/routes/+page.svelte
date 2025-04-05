@@ -29,7 +29,7 @@
   let input = $state("");
   let selectedModel = $state<AI_Name>(AI_Name.deepseek_chat);
   let loading = $state(false);
-  let selectedNodeId: string | undefined = $state(undefined);
+  // let chat.selectedNodeId: string | undefined = $state(undefined);
   let lastNodeId: string | undefined = $state(undefined);
 
   // 添加编辑状态管理
@@ -104,7 +104,7 @@
     loading = true;
     try {
       // 使用选择的节点ID或最后一个节点ID
-      const parentId = selectedNodeId || lastNodeId;
+      const parentId = chat.selectedNodeId || lastNodeId;
 
       // 调用chat方法并获取结果
       const newNodeId = await chat.chat(input, selectedModel, parentId);
@@ -115,7 +115,7 @@
       }
 
       input = ""; // 清空输入框
-      selectedNodeId = undefined; // 重置选择的节点
+      chat.selectedNodeId = lastNodeId; // 重置选择的节点
     } catch (error) {
       console.error("Chat error:", error);
     } finally {
@@ -131,7 +131,7 @@
 
   // 选择节点进行回复
   function selectNode(nodeId: string) {
-    selectedNodeId = nodeId;
+    chat.selectedNodeId = nodeId;
     lastNodeId = nodeId; // 同时更新lastNodeId
   }
 
@@ -327,18 +327,18 @@
     </ScrollArea>
 
     <!-- 选中的回复节点显示 -->
-    {#if selectedNodeId}
+    {#if chat.selectedNodeId}
       <div
         class="px-4 py-2 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 text-sm"
       >
         回复中：{chat.nodeIndex[chat.currentHistory][
-          selectedNodeId
+          chat.selectedNodeId
         ]?.user_content.content.substring(0, 50)}...
         <Button
           variant="ghost"
           size="sm"
           class="ml-2"
-          onclick={() => (selectedNodeId = undefined)}>取消</Button
+          onclick={() => (chat.selectedNodeId = undefined)}>取消</Button
         >
       </div>
     {/if}
